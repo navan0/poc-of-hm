@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static "main/css/index.css" %}">
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static "main/js/index.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<nav class="sidebar">
+	<ul class="menu">
+		<li>
+            <a href="/">
+    			<div class="icon">
+                    <img src="{% static "main/images/facerec.png" %}" alt="FaceRec"/>
+                </div>
+            </a>
+		</li>
+		<li class="selected">
+            <a href="/surveillance/">
+                <div class="icon">
+                    <img src="{% static "main/images/surveillance.png" %}" alt="Surveillance"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <a href="/deepfake-detection/">
+                <div class="icon">
+                    <img src="{% static "main/images/deepfake.png" %}" alt="DeepFake"/>
+                </div>
+            </a>
+		</li>
+        <li>
+            <a href="/blacklist/">
+                <div class="icon">
+                    <img src="{% static "main/images/blacklist.png" %}" alt="DeepFake"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <div class="icon">
+                <img src="{% static "main/images/add.png" %}" alt="Add"/>
+            </div>
+		</li>
+	</ul>
+</nav>
+
+<div class="module-container">
+    <h1 class="title">Smart Surveillance</h1>
+    <div class="add-button add-cam-button" onclick="addCamera()">Add Camera</div>
+    <div id="camera-view-container" class="cameras">
+        {% for camera in cameras %}
+        <div id="camera-form-{{camera.id}}" class="camera-view">
+            <img id="bg-{{camera.id}}" src="{{camera.video_source}}" >
+            <div class="remove-view" onclick="removeVideo()">Remove</div>
+            <form class="remove-view-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="delete_id" value="{{camera.id}}"/>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div id="camera-form" class="camera-view camera-view-template">
+    <form class="camera-form" method="post">
+        {% csrf_token %}
+        <h2>Add Camera</h2>
+        <label for="camera-name" class="input-label">Name</label>
+        <input id="camera-name" class="input-field" type="text" name="name"/>
+
+        <label for="camera-ip" class="input-label">Camera IP</label>
+        <input id="camera-ip" class="input-field" type="text" name="ip"/>
+
+        <label for="surveillance-type" class="input-label">Surveillance Type</label>
+        <select class="surveillance-type"  name="surveillance_type" id="surveillance-type">
+            {% for surveillance_type in surveillance_types %}
+            <option value="{{surveillance_type.0}}">{{surveillance_type.1}}</option>
+            {% endfor %}
+        </select>
+        <div class="button-container">
+            <button id="add-cancel" type="button" class="no-button" onclick="cancelAddCamera()">Cancel</button>
+            <button id="add-confirm" class="yes-button" type="submit" name="submit">Add</button>
+        </div>
+    </form
+</div>
+{% endblock %}

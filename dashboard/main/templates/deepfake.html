@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static "main/css/index.css" %}">
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static "main/js/index.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<nav class="sidebar">
+	<ul class="menu">
+		<li>
+            <a href="/">
+    			<div class="icon">
+                    <img src="{% static "main/images/facerec.png" %}" alt="FaceRec"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <a href="/surveillance/">
+                <div class="icon">
+                    <img src="{% static "main/images/surveillance.png" %}" alt="Surveillance"/>
+                </div>
+            </a>
+		</li>
+		<li  class="selected">
+            <a href="/deepfake-detection/">
+                <div class="icon">
+                    <img src="{% static "main/images/deepfake.png" %}" alt="DeepFake"/>
+                </div>
+            </a>
+		</li>
+        <li>
+            <a href="/blacklist/">
+                <div class="icon">
+                    <img src="{% static "main/images/blacklist.png" %}" alt="DeepFake"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <div class="icon">
+                <img src="{% static "main/images/add.png" %}" alt="Add"/>
+            </div>
+		</li>
+	</ul>
+</nav>
+<div class="module-container">
+    <h1 class="title">DeepFake Detection</h1>
+    <div class="search-container">
+        <div class="search-bar">
+            <form id="deepfake-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="file-select">
+                    <div class="file-select-button" id="file-name">Choose File</div>
+                        <input type="file" name="data_file" id="choose-file" onchange="updateFilename('choose-file', 'no-file')"/>
+                    <div class="file-select-name" id="no-file">No file chosen...</div>
+                </div>
+            </form>
+        </div>
+        <img src="{% static "main/images/upload.png" %}" alt="upload" onclick="performUpload()"/>
+    </div>
+    <div id="loader" class="center"></div>
+
+    <div id="sub-content">
+        {% if image %}
+        <div class="result-image">
+            <img src="{{ image }}"/>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

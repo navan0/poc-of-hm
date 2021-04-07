@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FakeFynder</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div style="padding: 50px;">
+    <!-- Upload MP4  -->
+    <div style="text-align: center;">
+        <form class="ui form fields" id="container_image_upload_form" action="/deepfake" method="POST"
+              enctype="multipart/form-data">
+            <div style="width: 100%;">
+                <h4>Upload video (MP4)</h4>
+                <div class="ui">
+                    <div style="width: 20%;" class="ui icon input field">
+                        <input class="prompt" name="data_file" type="file" id="upload_data">
+                        <button class="ui orange button upload btn btn_disabled right labeled icon" type="submit"
+                                value="Upload" id="upload_button">
+                            Upload
+                            <i class="ui upload icon"></i>
+                        </button>
+                    </div>
+                    <div class="results"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Dialog  -->
+<div class="ui basic modal" id="loading">
+    <div class="ui icon header">
+        <div class="loader" style="margin: auto;"></div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script type="text/javascript">
+    $('.upload').click(function(){
+        $('#loading').modal('show');
+
+    });
+</script>
+</body>
+
+</html>

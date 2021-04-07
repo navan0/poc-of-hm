@@ -1,0 +1,39 @@
+video {
+  height: 100vw;
+        position: relative;
+  transform: rotate(-17deg) scale(2.4) translate(20%, -12%);
+	
+  transition: all 1s;
+          padding: 0px;
+  margin: 0px;
+  opacity: .5;
+  z-index: 1;
+      }
+video:hover {
+  transform: rotate(17deg) scale(11.4) translate(-5%, 1.2%);
+  opacity: 1;
+} 
+      #video-space {
+        padding: 0px;
+  margin: 0px;
+background-color: #000;
+  overflow: hidden;
+  height: 259px;
+  box-shadow: 0 0 10px 4px rgba(255,255,255,.3);
+}
+
+
+
+#adiv {
+    width: 460px;
+    height: 259px;
+    background: #000;
+  position: absolute;
+  z-index: 0;
+}
+
+#acanvas {
+    display: none;
+    width: 10px;
+    height: 10px;
+}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+
+      <div>
+
+      <form action="upload" method="post" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+        <input type="file"  name="photo"  /><br />
+        <input type="submit" value="Upload"  class="span2">
+      </form>
+      <form action="add" method="post" enctype="multipart/form-data" action="{{ url_for('add') }}">
+        <input type="file"  name="image"  /><br />
+          <input type="text"  name="id" ><br>
+        <input type="submit" value="Add"  class="span2">
+      </form>
+
+
+      </div>
+    </div>
+{% endblock %}

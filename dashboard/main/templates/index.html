@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static "main/css/index.css" %}">
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static "main/js/index.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<nav class="sidebar">
+	<ul class="menu">
+		<li class="selected">
+            <a href="/">
+    			<div class="icon">
+                    <img src="{% static "main/images/facerec.png" %}" alt="FaceRec"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <a href="/surveillance/">
+                <div class="icon">
+                    <img src="{% static "main/images/surveillance.png" %}" alt="Surveillance"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <a href="/deepfake-detection/">
+                <div class="icon">
+                    <img src="{% static "main/images/deepfake.png" %}" alt="DeepFake"/>
+                </div>
+            </a>
+		</li>
+        <li>
+            <a href="/blacklist/">
+                <div class="icon">
+                    <img src="{% static "main/images/blacklist.png" %}" alt="DeepFake"/>
+                </div>
+            </a>
+		</li>
+		<li>
+            <div class="icon">
+                <img src="{% static "main/images/add.png" %}" alt="Add"/>
+            </div>
+		</li>
+	</ul>
+</nav>
+<div class="module-container">
+    <h1 class="title">Criminal Database</h1>
+    <div class="search-section">
+        <div class="search-container">
+            <div class="search-bar">
+                <form id="search-form" method="get">
+                    <input id="main-search" type="text" name="search" autofocus />
+                </form>
+                <form id="upload-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="file-select">
+                        <div class="file-select-button" id="file-name">Choose File</div>
+                            <input type="file" name="photo" id="choose-file" onchange="updateFilename('choose-file', 'no-file')"/>
+                        <div class="file-select-name" id="no-file">No file chosen...</div>
+                    </div>
+                </form>
+            </div>
+            <img id="search-cam" src="{% static "main/images/camera.svg" %}" alt="cam" onclick="toggleSearch()"/>
+            <img id="search-text" src="{% static "main/images/text.png" %}" alt="text" onclick="toggleSearch()"/>
+            <div class="vl"></div>
+            <img src="{% static "main/images/search.png" %}" alt="search" onclick="performSearch()"/>
+        </div>
+        <div class="add-button" onclick="showAddModal()">Add Criminal Data</div>
+    </div>
+
+    <div id="loader" class="center"></div>
+
+    <div id="sub-content" class="cards">
+        {% for criminal in criminals %}
+        <a class="card-details" href="#">
+            <div class="{% if criminal.blacklisted %}card-blacklisted{% else %}card-blacklist{% endif %}"
+                 onclick="blacklist()">{% if criminal.blacklisted %}Blacklisted{% else %}Blacklist{% endif %}</div>
+            <form class="blacklist-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{criminal.id}}"/>
+                <input type="hidden" name="blacklisted" value={% if criminal.blacklisted %}"false"{% else %}"true"{% endif %}/>
+            </form>
+            <div class="card">
+        		<img src="{{ criminal.image.url }}"/>
+                <div class="card-data">
+                    <div>{{ criminal.first_name }} {{ criminal.last_name }}</div>
+                    {% if criminal.dob %}<div>{{ criminal.dob }}</div>{% endif %}
+                    <div>{{ criminal.crime_nos|join:", " }}</div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block modals %}
+<div id="add-criminal-modal" class="modal">
+    <h2 class="form-header">Add Criminal Data</h2>
+    <form class="add-form" id="add-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="criminal-name">
+            <div class="first-name">
+                <label for="first-name" class="input-label">First Name</label>
+                <input id="first-name" class="input-field" type="text" name="first_name"/>
+            </div>
+            <div class="last-name">
+                <label for="last-name" class="input-label">Last Name</label>
+                <input id="last-name" class="input-field" type="text" name="last_name"/>
+            </div>
+        </div>
+        <div class="dob-image">
+            <div class="dob">
+                <label for="dob" class="input-label">Date of Birth</label>
+                <input id="dob" class="input-field" type="text" name="dob" />
+            </div>
+            <div class="crim-photo">
+                <label for="photo" class="input-label">Image</label>
+                <div class="file-select">
+                    <div class="file-select-button" id="file-name-1">Choose File</div>
+                        <input type="file" name="image" id="choose-file-1" onchange="updateFilename('choose-file-1', 'no-file-1')"/>
+                    <div class="file-select-name" id="no-file-1">No file chosen...</div>
+                </div>
+            </div>
+        </div>
+        <label for="crime-nos" class="input-label">Crime Nos</label>
+        <input id="crime-nos" class="input-field" type="text" name="crime_nos" />
+        <div class="button-container">
+            <button id="add-cancel" type="button" class="no-button" onclick="cancelAdd()">Cancel</button>
+            <button id="add-confirm" class="yes-button" type="submit" name="submit">Add</button>
+        </div>
+    </form>
+</div>
+<div id="backdrop" class="backdrop"></div>
+{% endblock %}
